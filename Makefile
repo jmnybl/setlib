@@ -1,8 +1,8 @@
-all: main
+all: pytset.so
 
-main: main.cpp tset.cpp tset.h
-	g++ -o main main.cpp tset.cpp
+pytset.so: tset.cpp tset.h pytset.pyx
+	python setup.py build_ext --inplace
 
 clean:
-	rm -f main
+	rm -f pytset.so
 
