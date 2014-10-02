@@ -11,6 +11,7 @@ class TSet {
         void intersection_update(TSet *other);
         void union_update(TSet *other);
         void minus_update(TSet *other);
+        void add_item(int item);
         void erase();
         void copy(TSet *other);
 
