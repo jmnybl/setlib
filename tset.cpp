@@ -5,17 +5,22 @@
 
 using namespace tset;
 
+const size_t bit_size_aelem = sizeof(aelem)*8;
+const aelem left_one =((aelem) 1)<<(bit_size_aelem-1);
+
 TSet::TSet(int tree_length) {
     this->tree_length=tree_length;
-    array_len=(tree_length/(sizeof(aelem)*8))+1;
+    array_len=tree_length/bit_size_aelem+1;
     bitdata=new aelem[array_len];
     erase();
-    puts("Hi");
 }
 
 void TSet::add_item(int item) {
-    bitdata[item/(sizeof(aelem)*8)] |= 1<<(sizeof(aelem)*8-1-item%(sizeof(aelem)*8));
-    puts("s");
+    bitdata[item/bit_size_aelem] |= left_one>>(item%bit_size_aelem);
+}
+
+bool TSet::has_item(int item) {
+     return (bitdata[item/bit_size_aelem] & left_one>>(item%bit_size_aelem));
 }
 
 void TSet::intersection_update(TSet *other) {
@@ -26,7 +31,6 @@ void TSet::intersection_update(TSet *other) {
         bitdata[i]&=other->bitdata[i];
         
     }
-    puts("aa");
 }
 
 void TSet::union_update(TSet *other) {
