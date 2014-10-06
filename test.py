@@ -1,9 +1,25 @@
 import pytset
 
-s=pytset.PyTSet(50)
-o=pytset.PyTSet(50,range(10))
+from test2 import main 
 
-print 1 in o
-for i in o:
-    print i
-s.intersection_update(o)
+s=pytset.PyTSet(100,range(50,70))
+o=pytset.PyTSet(100,range(60,80))
+
+
+print "s:",list(s)
+print "o:",list(o)
+
+s&=o
+print "intersection",list(s)
+
+s=pytset.PyTSet(100,range(50,70))
+s-=o
+print "s minus o:",list(s)
+
+s=pytset.PyTSet(100,range(50,70))
+s|=o
+print "union:",list(s)
+
+
+main()
+
