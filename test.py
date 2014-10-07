@@ -21,5 +21,5 @@ s|=o
 print "union:",list(s)
 
 
-main()
+main() 
 
