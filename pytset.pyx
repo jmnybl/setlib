@@ -11,6 +11,8 @@ cdef extern from "tset.h" namespace "tset":
         void union_update(TSet *)
         void add_item(int)
         bool has_item(int)
+        void start_iteration()
+        bool next_item(TSet *)
 
 cdef class PyTSet:
     cdef TSet *thisptr
@@ -31,11 +33,22 @@ cdef class PyTSet:
         self.thisptr.add_item(item)
     def __contains__(self, int item):
         return self.thisptr.has_item(item)
+##    def __iter__(self):
+##        cdef int i
+##        for i in range(self.thisptr.tree_length):
+##            if self.thisptr.has_item(i):
+##                yield i
+
     def __iter__(self):
         cdef int i
-        for i in range(self.thisptr.tree_length):
-            if self.thisptr.has_item(i):
-                yield i
+        cdef TSet *result = new TSet(self.thisptr.tree_length)
+        self.thisptr.start_iteration()
+        while self.thisptr.next_item(result):
+            for i in range(result.tree_length):
+                if result.has_item(i):
+                    yield i
+                    break
+
     def __iand__(self, PyTSet other):
         self.intersection_update(other)
         return self
@@ -45,3 +58,4 @@ cdef class PyTSet:
     def __ior__(self, PyTSet other):
         self.union_update(other)
         return self
+    

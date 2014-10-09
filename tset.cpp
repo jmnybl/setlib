@@ -56,4 +56,26 @@ void TSet::copy(TSet *other) {
     memcpy(bitdata,other->bitdata,array_len*sizeof(aelem));
 }
 
+void TSet::start_iteration() {
+    enum_state_idx=0;
+    enum_state=bitdata[0];
+}
+
+bool TSet::next_item(TSet *result) {
+    result->bitdata[enum_state_idx]=0;
+    result->bitdata[enum_state_idx]=enum_state&(~enum_state+1);
+    enum_state-=result->bitdata[enum_state_idx]; // remove the one we just found
+    if (result->bitdata[enum_state_idx]==0) {
+        if (enum_state_idx==array_len-1) {
+            return false;
+        }
+        else {
+            enum_state_idx++;
+            enum_state=bitdata[enum_state_idx];
+            return next_item(result);
+        }
+    }
+    return true;
+}
+
 
