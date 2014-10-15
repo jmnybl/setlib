@@ -13,6 +13,21 @@ TSet::TSet(int tree_length) {
     array_len=tree_length/bit_size_aelem+1;
     bitdata=new aelem[array_len];
     erase();
+    delete_memory=true;
+}
+
+TSet::TSet(int tree_length, aelem *bitdata) {
+    this->tree_length=tree_length;
+    array_len=tree_length/bit_size_aelem+1;
+    this->bitdata=bitdata;
+    delete_memory=false;
+}
+
+TSet::~TSet() {
+    if (delete_memory) {
+        delete[] bitdata;
+        puts("Memory deleted");
+    }
 }
 
 void TSet::add_item(int item) {
@@ -21,6 +36,15 @@ void TSet::add_item(int item) {
 
 bool TSet::has_item(int item) {
      return (bitdata[item/bit_size_aelem] & left_one>>(item%bit_size_aelem));
+}
+
+bool TSet::is_empty() {
+    for (int i=0;i<array_len;i++) {
+        if (bitdata[i]!=0) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void TSet::intersection_update(TSet *other) {
@@ -77,5 +101,22 @@ bool TSet::next_item(TSet *result) {
     }
     return true;
 }
+
+TSetArray::TSetArray(int tree_length) {
+    this->tree_length=tree_length;
+    array_len=(tree_length/bit_size_aelem+1)*tree_length;
+    bitdata=new aelem[array_len];
+    erase();
+}
+
+void TSetArray::erase() {
+    memset(bitdata, 0, array_len*sizeof(aelem));
+}
+
+void TSetArray::get_set(int index, TSet *result) {
+    result->bitdata=bitdata+(tree_length/bit_size_aelem+1)*index;
+}
+
+
 
 

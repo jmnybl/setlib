@@ -1,11 +1,13 @@
 import pytset
+import gc
 
 from test2 import main 
 
 s=pytset.PyTSet(100,range(50,70))
 o=pytset.PyTSet(100,range(60,80))
 
-
+o=None
+gc.collect()
 print "s:",list(s)
 for item in s:
     print item

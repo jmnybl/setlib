@@ -58,4 +58,7 @@ cdef class PyTSet:
     def __ior__(self, PyTSet other):
         self.union_update(other)
         return self
+
+    def __del__(self):
+        print "del"
     
