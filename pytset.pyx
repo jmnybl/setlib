@@ -13,6 +13,7 @@ cdef extern from "tset.h" namespace "tset":
         bool has_item(int)
         void start_iteration()
         bool next_item(TSet *)
+        char * get_data_as_char(int *)
 
 cdef class PyTSet:
     cdef TSet *thisptr
@@ -61,4 +62,10 @@ cdef class PyTSet:
 
     def __del__(self):
         print "del"
+
+    def tobytes(self):
+        cdef int size
+        cdef char *b = self.thisptr.get_data_as_char(&size)
+        cdef bytes result=b[:size]
+        return result
     

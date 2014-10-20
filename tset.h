@@ -1,3 +1,6 @@
+#ifndef __tset_h__
+#define __tset_h__
+
 typedef unsigned long aelem;
 
 namespace tset {
@@ -23,6 +26,9 @@ class TSet {
         bool next_item(TSet *result);
         void start_iteration();
         bool is_empty();
+        bool intersection_not_empty(TSet *other);
+        void delete_item(int item);
+        char* get_data_as_char(int *size);
 
 };
 
@@ -33,8 +39,8 @@ class TSetArray {
         aelem *bitdata;
 
         TSetArray(int length);
-////        void intersection_update(TSet *other);
-////        void union_update(TSet *other);
+        void intersection_update(TSetArray *other);
+        void union_update(TSetArray *other);
 ////        void minus_update(TSet *other);
 ////        void add_item(int item);
 ////        bool has_item(int item);
@@ -46,3 +52,6 @@ class TSetArray {
 
 };
 }
+
+#endif
+

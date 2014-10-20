@@ -30,8 +30,17 @@ TSet::~TSet() {
     }
 }
 
+char* TSet::get_data_as_char(int *size) {
+    *size=array_len*sizeof(aelem);
+    return (char *)(void *)bitdata;
+}
+
 void TSet::add_item(int item) {
     bitdata[item/bit_size_aelem] |= left_one>>(item%bit_size_aelem);
+}
+
+void TSet::delete_item(int item) {
+    bitdata[item/bit_size_aelem] &= ~(left_one>>(item%bit_size_aelem));
 }
 
 bool TSet::has_item(int item) {
@@ -55,6 +64,16 @@ void TSet::intersection_update(TSet *other) {
         bitdata[i]&=other->bitdata[i];
         
     }
+}
+
+bool TSet::intersection_not_empty(TSet *other) {
+
+    for (int i=0;i<array_len;i++) {
+        if (bitdata[i]&other->bitdata[i]!=0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void TSet::union_update(TSet *other) {
@@ -116,6 +135,21 @@ void TSetArray::erase() {
 void TSetArray::get_set(int index, TSet *result) {
     result->bitdata=bitdata+(tree_length/bit_size_aelem+1)*index;
 }
+
+void TSetArray::intersection_update(TSetArray *other) {
+
+    for (int i=0;i<array_len;i++) {
+        bitdata[i]&=(other->bitdata[i]);
+    }
+}
+
+void TSetArray::union_update(TSetArray *other) {
+
+    for (int i=0;i<array_len;i++) {
+        bitdata[i]|=(other->bitdata[i]);
+    }
+}
+
 
 
 
