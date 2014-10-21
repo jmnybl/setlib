@@ -1,6 +1,7 @@
 # distutils: language = c++
 # distutils: sources = tset.cpp
 from libcpp cimport bool
+import struct
 
 cdef extern from "tset.h" namespace "tset":
     cdef cppclass TSet:
@@ -67,5 +68,7 @@ cdef class PyTSet:
         cdef int size
         cdef char *b = self.thisptr.get_data_as_char(&size)
         cdef bytes result=b[:size]
-        return result
+        tree_len=struct.pack("@H",self.thisptr.tree_length)
+
+        return tree_len+result
     

@@ -121,6 +121,14 @@ bool TSet::next_item(TSet *result) {
     return true;
 }
 
+void TSet::add_serialized_data(void *data) {
+    tree_length=((unsigned short *)data)[0];
+    array_len=tree_length/bit_size_aelem+1;
+    bitdata=(aelem *)(data+sizeof(unsigned short));
+}
+
+
+
 TSetArray::TSetArray(int tree_length) {
     this->tree_length=tree_length;
     array_len=(tree_length/bit_size_aelem+1)*tree_length;
