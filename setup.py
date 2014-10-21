@@ -12,3 +12,11 @@ setup(ext_modules = cythonize(
            sources=["tset.cpp","query_functions.cpp"],  # additional source file(s)
            language="c++",             # generate C++ code
       ))
+
+setup(ext_modules = cythonize(
+           "db_index.pyx",                 # our Cython source
+           language="c++",             # generate C++ code
+           libraries=["sqlite3"],
+      ))
+
+
