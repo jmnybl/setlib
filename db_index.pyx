@@ -5,9 +5,9 @@ from libcpp cimport bool
 
 #...import stuff from this header file
 cdef extern from "sqlite3.h":
-    int sqlite3_open(char *filename, sqlite3 **ppDb) 
+    int sqlite3_open(const char *filename, sqlite3 **ppDb) 
     int sqlite3_close(sqlite3*)
-    int sqlite3_prepare_v2(sqlite3 *db, char *zSql, int nByte, sqlite3_stmt **ppStmt, char **pzTail)
+    int sqlite3_prepare_v2(sqlite3 *db, const char *zSql, int nByte, sqlite3_stmt **ppStmt, const char **pzTail)
     int sqlite3_step(sqlite3_stmt*)
     const void * sqlite3_column_blob(sqlite3_stmt*,int)
     struct sqlite3: #Defines the type. We never touch it directly, so an empty struct is apparently enough
@@ -56,7 +56,8 @@ def exec_query(unicode q):
 cdef int fill_next(TSet *out):
     global db,stmt
     cdef int result = sqlite3_step(stmt)
-    cdef void *data
+    cdef const void *data
     if result==SQLITE_ROW:
         data=sqlite3_column_blob(stmt,0)
+        # TODO
     return 0
