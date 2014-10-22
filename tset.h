@@ -29,7 +29,7 @@ class TSet {
         bool intersection_not_empty(TSet *other);
         void delete_item(int item);
         char* get_data_as_char(int *size);
-        void add_serialized_data(void *data);
+        void add_serialized_data(const void *data);
 
 };
 

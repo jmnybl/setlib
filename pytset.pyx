@@ -17,7 +17,7 @@ cdef extern from "tset.h" namespace "tset":
         char * get_data_as_char(int *)
 
 cdef class PyTSet:
-    cdef TSet *thisptr
+    #cdef TSet *thisptr
     def __cinit__(self, int length, it=None):
         self.thisptr = new TSet(length)
     def __init__(self, int length, it=None):

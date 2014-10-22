@@ -10,20 +10,33 @@ conn = sqlite3.connect('delme.db')
 make_dummy_db(conn)
 s=pytset.PyTSet(129,range(50,110))
 s_ser=s.tobytes()
-conn.execute(u"INSERT OR IGNORE INTO sets VALUES (?,?)",(u"s",buffer(s_ser)))
+conn.execute(u"INSERT OR IGNORE INTO sets VALUES (?,?)",(u"s1",buffer(s_ser)))
+s=pytset.PyTSet(129,range(51,110))
+s_ser=s.tobytes()
+conn.execute(u"INSERT OR IGNORE INTO sets VALUES (?,?)",(u"s2",buffer(s_ser)))
+s=pytset.PyTSet(129,range(52,110))
+s_ser=s.tobytes()
+conn.execute(u"INSERT OR IGNORE INTO sets VALUES (?,?)",(u"s3",buffer(s_ser)))
 conn.commit()
 conn.close()
 
 
-#And now try to get it back
-conn = sqlite3.connect('delme.db')
-cur=conn.cursor()
-cur.execute(u"SELECT set_data FROM sets WHERE name=?",(u"s",))
-for row in cur.fetchall():
-    print str(row[0])==s_ser, "<< should be True"
-conn.close()
+##And now try to get it back
+#conn = sqlite3.connect('delme.db')
+#cur=conn.cursor()
+#cur.execute(u"SELECT set_data FROM sets WHERE name=?",(u"s",))
+#for row in cur.fetchall():
+#    print str(row[0])==s_ser, "<< should be True"
+#conn.close()
 
-db_index.open_db(u"hi_hi")
+db_index.open_db(u"delme.db")
+q=u"select set_data from sets"
+db_index.exec_query(q)
+s=pytset.PyTSet(129,range(50,110))
+while db_index.python_fill_next(s)!=1:
+    for item in s:
+        print item,
+    print
 db_index.close_db()
 
 

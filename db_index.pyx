@@ -1,7 +1,9 @@
 # distutils: language = c++
 # distutils: libraries = sqlite3
+# distutils: sources = tset.cpp
 from libcpp cimport bool
 #http://www.sqlite.org/cintro.html
+from pytset cimport PyTSet 
 
 #...import stuff from this header file
 cdef extern from "sqlite3.h":
@@ -30,6 +32,7 @@ cdef extern from "tset.h" namespace "tset":
         void start_iteration()
         bool next_item(TSet *)
         char * get_data_as_char(int *)
+        void add_serialized_data(const void *)
 
 cdef sqlite3 *db #Pointer to the open DB
 cdef sqlite3_stmt *stmt # Pointer to the statement
@@ -59,5 +62,12 @@ cdef int fill_next(TSet *out):
     cdef const void *data
     if result==SQLITE_ROW:
         data=sqlite3_column_blob(stmt,0)
-        # TODO
-    return 0
+        out.add_serialized_data(data)
+        return 0
+    elif result==SQLITE_DONE:
+        return 1
+    else: return result
+
+def python_fill_next(PyTSet s):
+    return fill_next(s.thisptr)
+
