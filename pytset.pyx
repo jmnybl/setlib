@@ -3,21 +3,8 @@
 from libcpp cimport bool
 import struct
 
-cdef extern from "tset.h" namespace "tset":
-    cdef cppclass TSet:
-        int tree_length
-        TSet(int) except +
-        void intersection_update(TSet *)
-        void minus_update(TSet *)
-        void union_update(TSet *)
-        void add_item(int)
-        bool has_item(int)
-        void start_iteration()
-        bool next_item(TSet *)
-        char * get_data_as_char(int *)
-
 cdef class PyTSet:
-    #cdef TSet *thisptr
+    #cdef TSet *thisptr ## defined in pytset.pxd
     def __cinit__(self, int length, it=None):
         self.thisptr = new TSet(length)
     def __init__(self, int length, it=None):
@@ -71,4 +58,5 @@ cdef class PyTSet:
         tree_len=struct.pack("@H",self.thisptr.tree_length)
 
         return tree_len+result
+
     

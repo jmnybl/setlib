@@ -158,6 +158,19 @@ void TSetArray::union_update(TSetArray *other) {
     }
 }
 
+void TSetArray::deserialize(const void *data, int size) {
+    unsigned short *array=(unsigned short *)data;
+    tree_length=array[0];
+    array_len=(tree_length/bit_size_aelem+1)*tree_length;
+    erase();
+    
+    for (int i=1;i<((size-sizeof(unsigned short))/sizeof(unsigned short));i+=2) {
+        aelem *s=(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*array[i]);
+        s[array[i+1]/bit_size_aelem] |= left_one>>(array[i+1]%bit_size_aelem);
+    }
+    
+}
+
 
 
 

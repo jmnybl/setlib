@@ -50,6 +50,7 @@ class TSetArray {
 ////        bool next_item(TSet *result);
 ////        void start_iteration();
         void get_set(int index, TSet *result);
+        void deserialize(const void *data, int size);
 
 };
 }
