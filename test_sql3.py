@@ -23,14 +23,17 @@ def make_dummy_db(conn):
     
     s_n=pytset.PyTSet(3,[0])
     s_v=pytset.PyTSet(3,[1,2])
-    sa_nsubj_dependents=[set(),set(),set((0,1))]
+    sa_nsubj_dependents=[set(),set(),set((0,))]
+    sa_nsubj_governors=[set((2,)),set(),set()]
     sa_aux_dependents=[set(),set(),set((1,))]
+    sa_aux_governors=[set(),set((2,)),set()]
     
     conn.execute(u"INSERT INTO tagsets VALUES (?,?,?)",(0,u"N",buffer(s_n.tobytes())))
     conn.execute(u"INSERT INTO tagsets VALUES (?,?,?)",(0,u"V",buffer(s_v.tobytes())))
     conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"nsubj_dependents",buffer(serialize_as_tset_array(3,sa_nsubj_dependents))))
     conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"aux_dependents",buffer(serialize_as_tset_array(3,sa_aux_dependents))))
-
+    conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"nsubj_governors",buffer(serialize_as_tset_array(3,sa_nsubj_governors))))
+    conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"aux_governors",buffer(serialize_as_tset_array(3,sa_aux_governors))))
 
 conn = sqlite3.connect('delme.db')
 make_dummy_db(conn)
