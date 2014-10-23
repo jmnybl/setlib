@@ -34,9 +34,12 @@ def make_dummy_db(conn):
     conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"aux_dependents",buffer(serialize_as_tset_array(3,sa_aux_dependents))))
     conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"nsubj_governors",buffer(serialize_as_tset_array(3,sa_nsubj_governors))))
     conn.execute(u"INSERT INTO setarrays VALUES (?,?,?)",(0,u"aux_governors",buffer(serialize_as_tset_array(3,sa_aux_governors))))
-
+    conn.commit()
+    conn.close()
 conn = sqlite3.connect('delme.db')
 make_dummy_db(conn)
+
+
 
 # s=pytset.PyTSet(129,range(50,110))
 # s_ser=s.tobytes()

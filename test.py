@@ -5,16 +5,16 @@ import gc
 
 from test2 import main 
 
-s=pytset.PyTSet(100,range(50,70))
-o=pytset.PyTSet(129,range(60,80))
+##s=pytset.PyTSet(100,range(50,70))
+##o=pytset.PyTSet(129,range(60,80))
 
-print len(o.tobytes())
+##print len(o.tobytes())
 
-o=None
-gc.collect()
-print "s:",list(s)
-for item in s:
-    print item
+##o=None
+##gc.collect()
+##print "s:",list(s)
+##for item in s:
+##    print item
 ##print "o:",list(o)
 
 ##s&=o
@@ -29,5 +29,5 @@ for item in s:
 ##print "union:",list(s)
 
 
-##main() 
+main() 
 

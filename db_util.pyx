@@ -19,7 +19,8 @@ cdef class DB:
         query_u8=query.encode("utf-8")
         result=sqlite3_prepare_v2(self.db,query_u8,len(query_u8),&self.stmt,NULL)
         if result!=SQLITE_OK:
-            return False
+            print sqlite3_errmsg(self.db)
+            return False, result
         else:
             return True
 
@@ -49,4 +50,16 @@ cdef class DB:
 
     def fill_pytsetarray(self, PyTSetArray s, int column_index):
         self.fill_tsetarray(s.thisptr, column_index)
+
+    cdef void fill_sets(self, void **set_pointers, int *types, int size):
+        cdef int i
+        for i in range(size):
+            if types[i]==1: # TODO fix
+                self.fill_tset(<TSet *>set_pointers[i],i)
+            elif types[i]==2:
+                self.fill_tsetarray(<TSetArray *>set_pointers[i],i)
+            else:
+                print "C",types[i]
+                assert False
+            
 

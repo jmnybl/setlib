@@ -8,6 +8,7 @@ cdef extern from "sqlite3.h":
     int sqlite3_step(sqlite3_stmt*)
     const void * sqlite3_column_blob(sqlite3_stmt*, int)
     int sqlite3_column_bytes(sqlite3_stmt*, int iCol)
+    const char * sqlite3_errmsg(sqlite3 *)
     struct sqlite3: #Defines the type. We never touch it directly, so an empty struct is apparently enough
         pass     
     struct sqlite3_stmt:
@@ -39,5 +40,7 @@ cdef class DB:
     cdef void fill_tset(self, TSet *out, int column_index)
     cdef void fill_tsetarray(self, TSetArray *out, int column_index)
     cpdef int next(self)
+    cdef void fill_sets(self, void **set_pointers, int *types, int size)
     
-
+cdef int TSET=1
+cdef int TSETARRAY=2
