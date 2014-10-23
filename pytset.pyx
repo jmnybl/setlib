@@ -59,4 +59,24 @@ cdef class PyTSet:
 
         return tree_len+result
 
+cdef class PyTSetArray:
+    #cdef TSetArray *thisptr #defined in pytset.pxd
+
+    def __cinit__(self, int length):
+        self.thisptr = new TSetArray(length)
+
+    def deserialize(self,bytes ser_data): #note the bytes type
+        cdef char *ser_data_c=ser_data
+        self.thisptr.deserialize(ser_data_c,len(ser_data))        
     
+    def __iter__(self):
+        cdef PyTSet s=PyTSet(self.thisptr.tree_length)
+        cdef int i
+        for i in range(self.thisptr.tree_length):
+            self.thisptr.get_set(i,s.thisptr)
+            for x in s:
+                yield (i,x)
+
+    def to_string(self):
+        return " ".join(str(x) for x in self)
+

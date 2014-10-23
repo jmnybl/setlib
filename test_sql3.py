@@ -39,18 +39,14 @@ sets=[set() for _ in range(20)]
 sets[0].add(5)
 sets[0].add(15)
 sets[1].add(17)
-conn.execute(u"INSERT OR IGNORE INTO setarrays VALUES (?,?)",(u"sa1",buffer(serialize_as_tset_array(20,sets))))
+serialized_str=serialize_as_tset_array(20,sets)
+tsetarray=pytset.PyTSetArray(20)
+tsetarray.deserialize(serialized_str)
+print tsetarray.to_string()
+conn.execute(u"INSERT OR IGNORE INTO setarrays VALUES (?,?)",(u"sa1",buffer(serialized_str)))
 conn.commit()
 conn.close()
 
-
-##And now try to get it back
-#conn = sqlite3.connect('delme.db')
-#cur=conn.cursor()
-#cur.execute(u"SELECT set_data FROM sets WHERE name=?",(u"s",))
-#for row in cur.fetchall():
-#    print str(row[0])==s_ser, "<< should be True"
-#conn.close()
 
 db_index.open_db(u"delme.db")
 q=u"select set_data from sets"
@@ -63,5 +59,14 @@ while db_index.python_fill_next(s)!=1:
 db_index.close_db()
 
 
+db_index.open_db(u"delme.db")
+q=u"select setarray_data from setarrays"
+db_index.exec_query(q)
+s=pytset.PyTSet(129,range(50,110))
+while db_index.python_fill_next(s)!=1:
+    for item in s:
+        print item,
+    print
+db_index.close_db()
 
 
