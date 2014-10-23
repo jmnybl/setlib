@@ -36,9 +36,8 @@ cdef extern from "tset.h" namespace "tset":
 cdef class DB:
     cdef sqlite3 *db #Pointer to the open DB
     cdef sqlite3_stmt *stmt # Pointer to a prepared statement
-    cdef int fill_tset(self, TSet *out, int column_index)
-    cdef int fill_tsetarray(self, TSetArray *out, int column_index)
-    
-
+    cdef void fill_tset(self, TSet *out, int column_index)
+    cdef void fill_tsetarray(self, TSetArray *out, int column_index)
+    cpdef int next(self)
     
 
