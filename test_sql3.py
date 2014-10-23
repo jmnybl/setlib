@@ -52,20 +52,17 @@ DB.open_db(u"delme.db")
 q=u"select set_data from sets"
 DB.exec_query(q)
 s=pytset.PyTSet(129,range(50,110))
-while DB.fill_next_pytset(s)!=1:
+while DB.fill_pytset(s,0)!=1:
     for item in s:
         print item,
     print
 DB.close_db()
-
 
 DB.open_db(u"delme.db")
 q=u"select setarray_data from setarrays"
 DB.exec_query(q)
 sa=pytset.PyTSetArray(100)
 print "Empty set array:", sa.to_string()
-while DB.fill_next_pytsetarray(sa)!=1:
+while DB.fill_pytsetarray(sa,0)!=1:
     print "Set array from DB:", sa.to_string()
 DB.close_db()
-
-

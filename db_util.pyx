@@ -22,11 +22,11 @@ cdef class DB:
         else:
             return True
 
-    cdef int fill_next_tset(self,TSet *out):
+    cdef int fill_tset(self,TSet *out,int column_index):
         cdef int result = sqlite3_step(self.stmt)
         cdef const void *data
         if result==SQLITE_ROW:
-            data=sqlite3_column_blob(self.stmt,0)
+            data=sqlite3_column_blob(self.stmt,column_index)
             out.add_serialized_data(data)
             return 0
         elif result==SQLITE_DONE:
@@ -34,13 +34,13 @@ cdef class DB:
         else: 
             return result #TODO: UGLY
 
-    cdef int fill_next_tsetarray(self, TSetArray *out):
+    cdef int fill_tsetarray(self, TSetArray *out,int column_index):
         cdef int blob_len
         cdef int result = sqlite3_step(self.stmt)
         cdef const void *data
         if result==SQLITE_ROW:
-            data=sqlite3_column_blob(self.stmt,0)
-            blob_len=sqlite3_column_bytes(self.stmt, 0);
+            data=sqlite3_column_blob(self.stmt,column_index)
+            blob_len=sqlite3_column_bytes(self.stmt, column_index);
             out.deserialize(data,blob_len)
             return 0
         elif result==SQLITE_DONE:
@@ -48,9 +48,9 @@ cdef class DB:
         else: 
             return result #TODO: UGLY
 
-    def fill_next_pytset(self, PyTSet s):
-        return self.fill_next_tset(s.thisptr)
+    def fill_pytset(self, PyTSet s, int column_index):
+        return self.fill_tset(s.thisptr, column_index)
 
-    def fill_next_pytsetarray(self, PyTSetArray s):
-        return self.fill_next_tsetarray(s.thisptr)
+    def fill_pytsetarray(self, PyTSetArray s, int column_index):
+        return self.fill_tsetarray(s.thisptr, column_index)
 

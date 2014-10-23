@@ -6,7 +6,7 @@ cdef extern from "sqlite3.h":
     int sqlite3_close(sqlite3*)
     int sqlite3_prepare_v2(sqlite3 *db, const char *zSql, int nByte, sqlite3_stmt **ppStmt, const char **pzTail)
     int sqlite3_step(sqlite3_stmt*)
-    const void * sqlite3_column_blob(sqlite3_stmt*,int)
+    const void * sqlite3_column_blob(sqlite3_stmt*, int)
     int sqlite3_column_bytes(sqlite3_stmt*, int iCol)
     struct sqlite3: #Defines the type. We never touch it directly, so an empty struct is apparently enough
         pass     
@@ -36,8 +36,8 @@ cdef extern from "tset.h" namespace "tset":
 cdef class DB:
     cdef sqlite3 *db #Pointer to the open DB
     cdef sqlite3_stmt *stmt # Pointer to a prepared statement
-    cdef int fill_next_tset(self,TSet *out)
-    cdef int fill_next_tsetarray(self, TSetArray *out)
+    cdef int fill_tset(self, TSet *out, int column_index)
+    cdef int fill_tsetarray(self, TSetArray *out, int column_index)
     
 
     
