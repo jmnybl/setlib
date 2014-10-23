@@ -1,6 +1,6 @@
 import pytset
 import sqlite3
-import db_index
+import db_util
 import struct
 
 def serialize_as_tset_array(tree_len,sets):
@@ -47,25 +47,25 @@ conn.execute(u"INSERT OR IGNORE INTO setarrays VALUES (?,?)",(u"sa1",buffer(seri
 conn.commit()
 conn.close()
 
-
-db_index.open_db(u"delme.db")
+DB=db_util.DB()
+DB.open_db(u"delme.db")
 q=u"select set_data from sets"
-db_index.exec_query(q)
+DB.exec_query(q)
 s=pytset.PyTSet(129,range(50,110))
-while db_index.python_fill_next_pytset(s)!=1:
+while DB.fill_next_pytset(s)!=1:
     for item in s:
         print item,
     print
-db_index.close_db()
+DB.close_db()
 
 
-db_index.open_db(u"delme.db")
+DB.open_db(u"delme.db")
 q=u"select setarray_data from setarrays"
-db_index.exec_query(q)
+DB.exec_query(q)
 sa=pytset.PyTSetArray(100)
 print "Empty set array:", sa.to_string()
-while db_index.python_fill_next_pytsetarray(sa)!=1:
+while DB.fill_next_pytsetarray(sa)!=1:
     print "Set array from DB:", sa.to_string()
-db_index.close_db()
+DB.close_db()
 
 

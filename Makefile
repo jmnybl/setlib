@@ -1,8 +1,8 @@
-TARGETS=pytset.so test2.so db_index.so
+TARGETS=pytset.so test2.so db_util.so
 
 all: $(TARGETS)
 
-db_index.so: db_index.pyx
+db_util.so: db_util.pyx db_util.pxd
 	python setup.py build_ext --inplace
 
 pytset.so: tset.cpp tset.h pytset.pyx query_functions.cpp query_functions.h
