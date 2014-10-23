@@ -3,7 +3,7 @@
 # distutils: sources = tset.cpp
 from libcpp cimport bool
 #http://www.sqlite.org/cintro.html
-from pytset cimport PyTSet 
+from pytset cimport PyTSet, PyTSetArray 
 
 #...import stuff from this header file
 cdef extern from "sqlite3.h":
@@ -12,6 +12,7 @@ cdef extern from "sqlite3.h":
     int sqlite3_prepare_v2(sqlite3 *db, const char *zSql, int nByte, sqlite3_stmt **ppStmt, const char **pzTail)
     int sqlite3_step(sqlite3_stmt*)
     const void * sqlite3_column_blob(sqlite3_stmt*,int)
+    int sqlite3_column_bytes(sqlite3_stmt*, int iCol)
     struct sqlite3: #Defines the type. We never touch it directly, so an empty struct is apparently enough
         pass     
     struct sqlite3_stmt:
@@ -33,6 +34,8 @@ cdef extern from "tset.h" namespace "tset":
         bool next_item(TSet *)
         char * get_data_as_char(int *)
         void add_serialized_data(const void *)
+    cdef cppclass TSetArray:
+        void deserialize(const void *data, int size)
 
 cdef sqlite3 *db #Pointer to the open DB
 cdef sqlite3_stmt *stmt # Pointer to the statement
@@ -56,7 +59,7 @@ def exec_query(unicode q):
     else:
         return True
 
-cdef int fill_next(TSet *out):
+cdef int fill_next_tset(TSet *out):
     global db,stmt
     cdef int result = sqlite3_step(stmt)
     cdef const void *data
@@ -68,6 +71,24 @@ cdef int fill_next(TSet *out):
         return 1
     else: return result
 
-def python_fill_next(PyTSet s):
-    return fill_next(s.thisptr)
+cdef int fill_next_tsetarray(TSetArray *out):
+    global db,stmt
+    cdef int blob_len
+    cdef int result = sqlite3_step(stmt)
+    cdef const void *data
+    if result==SQLITE_ROW:
+        data=sqlite3_column_blob(stmt,0)
+        blob_len=sqlite3_column_bytes(stmt, 0);
+        out.deserialize(data,blob_len)
+        return 0
+    elif result==SQLITE_DONE:
+        return 1
+    else: return result
+
+
+def python_fill_next_pytset(PyTSet s):
+    return fill_next_tset(s.thisptr)
+
+def python_fill_next_pytsetarray(PyTSetArray s):
+    return fill_next_tsetarray(s.thisptr)
 
