@@ -1,6 +1,8 @@
 #ifndef __tset_h__
 #define __tset_h__
 
+#include <string.h>
+
 typedef unsigned long aelem;
 
 namespace tset {

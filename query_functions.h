@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <stddef.h>
 #include "tset.h"
-using namespace tset;
-void pairing(TSet *index_set, TSet *other_set, TSetArray *mapping);
+
+void pairing(tset::TSet *index_set, tset::TSet *other_set, tset::TSetArray *mapping);
 
 
 #endif
