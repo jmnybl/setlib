@@ -2,6 +2,7 @@
 # distutils: sources = tset.cpp query_functions.cpp
 from libcpp cimport bool
 from db_util cimport DB
+from pytset cimport PyTSet
 
 cdef extern from "tset.h" namespace "tset":
     cdef cppclass TSet:
@@ -13,6 +14,7 @@ cdef extern from "tset.h" namespace "tset":
         void add_item(int)
         bool has_item(int)
         void fill_ones()
+        bool is_empty()
 
     cdef cppclass TSetArray:
         int tree_length
@@ -50,10 +52,19 @@ cpdef main():
     s = Search()
     db=DB()
     db.open_db(u"delme.db")
-    q=u"select tagsets.set_data, setarrays.setarray_data from tagsets join setarrays on tagsets.sent_id=setarrays.sent_id where tagsets.tag_name='V' and setarrays.dep_name='aux_governors'"
+    q=u"select tagsets.set_data, setarrays.setarray_data from tagsets join setarrays on tagsets.sent_id=setarrays.sent_id where tagsets.tag_name='V' and setarrays.dep_name='aux_dependents'"
     print "A", db.exec_query(q)
     print "B",db.next()
     s.initialize()
+    print "ok"
     db.fill_sets(s.sets,s.set_types,2)
+    print "ok2"
+    cdef TSet *result
+    result=s.exec_search()
+    r = PyTSet(3)
+    print "result:",result.is_empty()
+    r.thisptr=result
+    for item in r:
+        print "token:",item
     
     
