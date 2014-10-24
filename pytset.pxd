@@ -12,6 +12,7 @@ cdef extern from "tset.h" namespace "tset":
         void start_iteration()
         bool next_item(TSet *)
         char * get_data_as_char(int *)
+        void fill_ones()
 
     cdef cppclass TSetArray:
         int tree_length

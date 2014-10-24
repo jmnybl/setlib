@@ -121,6 +121,10 @@ bool TSet::next_item(TSet *result) {
     return true;
 }
 
+void TSet::fill_ones() {
+    memset(bitdata,~0,array_len*sizeof(aelem));
+}
+
 void TSet::add_serialized_data(const void *data) {
     tree_length=((unsigned short *)data)[0];
     array_len=tree_length/bit_size_aelem+1;

@@ -30,6 +30,7 @@ class TSet {
         void delete_item(int item);
         char* get_data_as_char(int *size);
         void add_serialized_data(const void *data);
+        void fill_ones();
 
 };
 
