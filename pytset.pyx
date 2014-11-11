@@ -52,8 +52,9 @@ cdef class PyTSet:
         self.union_update(other)
         return self
 
-    def __del__(self):
-        print "del"
+    def __dealloc__(self):
+        del self.thisptr
+        
 
     def tobytes(self):
         cdef int size
@@ -83,4 +84,7 @@ cdef class PyTSetArray:
 
     def to_string(self):
         return " ".join(str(x) for x in self)
+
+    def __dealloc__(self):
+        del self.thisptr
 

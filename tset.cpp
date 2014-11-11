@@ -26,7 +26,6 @@ TSet::TSet(int tree_length, aelem *bitdata) {
 TSet::~TSet() {
     if (delete_memory) {
         delete[] bitdata;
-        puts("Memory deleted");
     }
 }
 
