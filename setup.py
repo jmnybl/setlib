@@ -8,7 +8,7 @@ setup(ext_modules = cythonize(
       ))
 
 setup(ext_modules = cythonize(
-           "test2.pyx",                 # our Cython source
+           "example_queries.pyx",                 # our Cython source
            sources=["tset.cpp","query_functions.cpp"],  # additional source file(s)
            language="c++",             # generate C++ code
       ))

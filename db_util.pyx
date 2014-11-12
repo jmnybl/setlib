@@ -14,8 +14,10 @@ cdef class DB:
     def close_db(self):
         sqlite3_close(self.db)
 
-    def exec_query(self,unicode query):
-        """Runs sqlite3_prepare, use .next() to iterate through the rows"""
+    def exec_query(self,unicode query, args):
+        """Runs sqlite3_prepare, use .next() to iterate through the rows. Args is a list of *UNICODE* arguments to bind to the query"""
+        cdef unicode a
+        cdef int idx
         query_u8=query.encode("utf-8")
         result=sqlite3_prepare_v2(self.db,query_u8,len(query_u8),&self.stmt,NULL)
         if result!=SQLITE_OK:
@@ -23,6 +25,14 @@ cdef class DB:
             return False, result
         else:
             return True
+        for idx,a in enumerate(args):
+            a_u8=a.encode("utf-8")
+            result=sqlite3_bind_text(self.stmt,idx+1,a_u8,-1,NULL)
+            if result!=SQLITE_OK:
+                print sqlite3_errmsg(self.db)
+                return False, result
+            else:
+                return True
 
     cpdef int next(self):
         cdef int result = sqlite3_step(self.stmt)
@@ -54,7 +64,7 @@ cdef class DB:
     cdef void fill_sets(self, void **set_pointers, int *types, int size):
         cdef int i
         for i in range(size):
-            if types[i]==1: # TODO fix
+            if types[i]==1: # TODO fix constant
                 self.fill_tset(<TSet *>set_pointers[i],i)
             elif types[i]==2:
                 self.fill_tsetarray(<TSetArray *>set_pointers[i],i)

@@ -8,6 +8,7 @@ cdef extern from "sqlite3.h":
     int sqlite3_step(sqlite3_stmt*)
     const void * sqlite3_column_blob(sqlite3_stmt*, int)
     int sqlite3_column_bytes(sqlite3_stmt*, int iCol)
+    int sqlite3_bind_text(sqlite3_stmt*,int iCol,const char* val,int len, void(*)(void*))
     const char * sqlite3_errmsg(sqlite3 *)
     struct sqlite3: #Defines the type. We never touch it directly, so an empty struct is apparently enough
         pass     
