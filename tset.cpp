@@ -127,6 +127,7 @@ void TSet::fill_ones() {
 void TSet::add_serialized_data(const void *data) {
     tree_length=((unsigned short *)data)[0];
     array_len=tree_length/bit_size_aelem+1;
+    //printf("%d %d",tree_length,array_len);
     bitdata=(aelem *)((char *)data+sizeof(unsigned short));
 }
 

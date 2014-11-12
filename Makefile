@@ -15,6 +15,6 @@ example_queries.so: example_queries.pyx
 	python setup.py build_ext --inplace
 	mv setlib/example_queries.so .
 clean:
-	rm -rf setlib
+	rm -rf $(TARGETS)
 
 
