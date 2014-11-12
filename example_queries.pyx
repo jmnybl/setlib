@@ -28,9 +28,9 @@ cdef extern from "tset.h" namespace "tset":
         void deserialize(const void *data, int size)
 
 cdef extern from "query_functions.h":
-    void pairing(TSet *index_set, TSet *other_set, TSetArray *mapping)
+    void pairing(TSet *index_set, TSet *other_set, TSetArray *mapping, bool negated)
 
-cdef class SimpleSearch:
+cdef class  SimpleSearch:
     """
     _ <aux V
     0   1  2 <--- set number for variable names below
@@ -41,7 +41,7 @@ cdef class SimpleSearch:
     cdef TSet *set0 #declare the sets needed in the query
     cdef TSetArray *seta1
     cdef TSet *set2
-    cdef object query_fiels
+    cdef public object query_fields
 
     def __cinit__(self):
         #This runs only once per search, creates the data structures, etc.
@@ -49,8 +49,6 @@ cdef class SimpleSearch:
         self.set0,self.seta1,self.set2=new TSet(312), new TSetArray(312), new TSet(312) ## all sets needed in the query must be created 
         self.sets[0]=self.seta1 #...feed the pointers into the sets[] array so the DB can fill them with data for us
         self.sets[1]=self.set2 #...
-
-    def __init__(self):
         self.query_fields=[u"!deps_a_aux",u"!tags_V"] #we want the sentence to have an aux and a V (these must come in the order in which sets[] and set_types[] come)
 
     cdef initialize(self):
@@ -64,7 +62,7 @@ cdef class SimpleSearch:
         """
         This runs the actual query. I.e. initialize() has been called for us and all sets are filled with valid data.
         """
-        pairing(self.set0,self.set2,self.seta1) #Filter set0 by set2 through the seta1 mapping
+        pairing(self.set0,self.set2,self.seta1,False) #Filter set0 by set2 through the seta1 mapping
         return self.set0 #...and that's where we have the result
 
 
