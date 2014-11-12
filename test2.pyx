@@ -27,7 +27,7 @@ cdef extern from "tset.h" namespace "tset":
         void deserialize(const void *data, int size)
 
 cdef extern from "query_functions.h":
-    void pairing(TSet *index_set, TSet *other_set, TSetArray *mapping)
+    void pairing(TSet *index_set, TSet *other_set, TSetArray *mapping, bool negated)
 
 cdef class Search:
 
@@ -44,7 +44,7 @@ cdef class Search:
         self.set1.fill_ones()
 
     cdef TSet* exec_search(self):
-        pairing(<TSet *>self.sets[0],self.set1,<TSetArray *>self.sets[1])
+        pairing(<TSet *>self.sets[0],self.set1,<TSetArray *>self.sets[1], False)
         return <TSet *>self.sets[0]
 
 cpdef main():
