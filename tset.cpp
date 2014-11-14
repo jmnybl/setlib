@@ -47,12 +47,12 @@ bool TSet::has_item(int item) {
 }
 
 bool TSet::is_empty() {
-    for (int i=0;i<array_len;i++) {
-        if (bitdata[i]!=0) {
-            return false;
-        }
+  for (int i=0; i<tree_length; i++) { //TODO: smarter
+    if (has_item(i)) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
 void TSet::intersection_update(TSet *other) {
@@ -167,7 +167,6 @@ void TSetArray::deserialize(const void *data, int size) {
     tree_length=array[0];
     array_len=(tree_length/bit_size_aelem+1)*tree_length;
     erase();
-    
     for (int i=1;i<((size-sizeof(unsigned short))/sizeof(unsigned short));i+=2) {
         aelem *s=(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*array[i]);
         s[array[i+1]/bit_size_aelem] |= left_one>>(array[i+1]%bit_size_aelem);

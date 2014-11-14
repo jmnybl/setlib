@@ -15,6 +15,9 @@ cdef class PyTSet:
             for i in it:
                 self.add_item(i)
 
+    def is_empty(self):
+        return self.thisptr.is_empty()
+
     def intersection_update(self, PyTSet other):
         self.thisptr.intersection_update(other.thisptr)
 
@@ -29,6 +32,9 @@ cdef class PyTSet:
 
     def __contains__(self, int item):
         return self.thisptr.has_item(item)
+
+    def len(self):
+        return self.thisptr.tree_length
 
     def __iter__(self):
         cdef int i

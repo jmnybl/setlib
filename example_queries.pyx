@@ -82,11 +82,19 @@ cdef class  SimpleSearch(Search):
 def iterate_results(Search search, DB database):
     cdef int size=len(search.query_fields)
     cdef TSet* r
+    cdef PyTSet s
+    s=PyTSet(320)
+    counter=0
     while database.next() == 0:
+        counter+=1
         database.fill_sets(search.sets,search.set_types,size)
         search.initialize()
         r=search.exec_search()
-        print r.is_empty()
+        s.thisptr=r
+        if not s.is_empty():
+            print "HIT"
+
+
 
 # cpdef main():
 #     cdef Search s
