@@ -88,9 +88,10 @@ cdef class PyTSetArray:
             for x in s:
                 yield (i,x)
 
+    def print_array(self):
+        self.thisptr.print_array()
+
     def to_string(self):
         return " ".join(str(x) for x in self)
 
-    def __dealloc__(self):
-        del self.thisptr
 

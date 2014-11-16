@@ -19,13 +19,15 @@ cdef class DB:
         cdef unicode a
         cdef int idx
         query_u8=query.encode("utf-8")
+        cdef char* txt=query_u8
         result=sqlite3_prepare_v2(self.db,query_u8,len(query_u8),&self.stmt,NULL)
         if result!=SQLITE_OK:
             print sqlite3_errmsg(self.db)
             return False, result
         for idx,a in enumerate(args):
             a_u8=a.encode("utf-8")
-            result=sqlite3_bind_text(self.stmt,idx+1,a_u8,-1,NULL)
+            txt=a_u8
+            result=sqlite3_bind_text(self.stmt,idx+1,txt,len(a_u8),<void (*)(void *)>-1)
             if result!=SQLITE_OK:
                 print sqlite3_errmsg(self.db)
                 return False, result
@@ -57,6 +59,9 @@ cdef class DB:
 
     def fill_pytsetarray(self, PyTSetArray s, int column_index):
         self.fill_tsetarray(s.thisptr, column_index)
+
+    cdef int get_integer(self, int column_index):
+        return sqlite3_column_int(self.stmt, column_index)
 
     cdef void fill_sets(self, void **set_pointers, int *types, int size):
         cdef int i

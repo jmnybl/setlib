@@ -3,7 +3,7 @@
 
 from libcpp cimport bool
 from db_util cimport DB
-from pytset cimport PyTSet
+from pytset cimport PyTSet, PyTSetArray
 from libc.stdlib cimport malloc
 
 cdef extern from "tset.h" namespace "tset":
@@ -18,6 +18,7 @@ cdef extern from "tset.h" namespace "tset":
         bool has_item(int)
         void fill_ones()
         bool is_empty()
+        void print_set()
 
     cdef cppclass TSetArray:
         int tree_length
@@ -28,6 +29,7 @@ cdef extern from "tset.h" namespace "tset":
         void erase()
         void get_set(int index, TSet *result)
         void deserialize(const void *data, int size)
+        void print_array()
 
 cdef extern from "query_functions.h":
     void pairing(TSet *index_set, TSet *other_set, TSetArray *mapping, bool negated)
@@ -76,23 +78,36 @@ cdef class  SimpleSearch(Search):
         """
         This runs the actual query. I.e. initialize() has been called for us and all sets are filled with valid data.
         """
+        #self.set0.print_set()
+        #self.seta1.print_array()
+        #self.set2.print_set()
         pairing(self.set0,self.set2,self.seta1,False) #Filter set0 by set2 through the seta1 mapping
+        #print "Filtered"
+        #self.set0.print_set()
+        #print "^^"
+        #print
         return self.set0 #...and that's where we have the result
 
 def iterate_results(Search search, DB database):
     cdef int size=len(search.query_fields)
     cdef TSet* r
     cdef PyTSet s
+    cdef int graph_id
+    cdef int tree_length
+    cdef int d
     s=PyTSet(320)
     counter=0
-    while database.next() == 0:
+    while database.next()==0:
         counter+=1
+        graph_id=database.get_integer(0)
+        tree_length=database.get_integer(1)
         database.fill_sets(search.sets,search.set_types,size)
         search.initialize()
         r=search.exec_search()
         s.thisptr=r
         if not s.is_empty():
-            print "HIT"
+            print "HIT", graph_id, tree_length
+    print "COUNTER", counter
 
 
 
