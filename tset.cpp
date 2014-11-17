@@ -9,11 +9,19 @@ const size_t bit_size_aelem = sizeof(aelem)*8;
 const aelem left_one =((aelem) 1)<<(bit_size_aelem-1);
 
 TSet::TSet(int tree_length) {
-    this->tree_length=tree_length;
-    array_len=tree_length/bit_size_aelem+1;
-    bitdata=new aelem[array_len];
-    erase();
-    delete_memory=true;
+    if (tree_length>0) {
+      this->tree_length=tree_length;
+      array_len=tree_length/bit_size_aelem+1;
+      bitdata=new aelem[array_len];
+      erase();
+      delete_memory=true;
+    }
+    else {
+      this->tree_length=0;
+      array_len=0;
+      bitdata=NULL;
+      delete_memory=false;
+    }
 }
 
 TSet::TSet(int tree_length, aelem *bitdata) {
@@ -67,13 +75,18 @@ void TSet::intersection_update(TSet *other) {
 
 bool TSet::intersection_not_empty(TSet *other) {
 
-    for (int i=0;i<array_len;i++) {
-        if (bitdata[i]&other->bitdata[i]!=0) {
-            return true;
-        }
+  for (int i=0;i<tree_length;i++) { //TODO:smarter
+    if (has_item(i) && other->has_item(i)) {
+      return true;
     }
+  }
+    //     if (bitdata[i]&other->bitdata[i]!=0) {
+    //         return true;
+    //     }
+    // }
     return false;
 }
+
 
 void TSet::union_update(TSet *other) {
     assert(tree_length==other->tree_length);

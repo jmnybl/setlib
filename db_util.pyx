@@ -25,11 +25,11 @@ cdef class DB:
             return False, result
         for idx,a in enumerate(args):
             a_u8=a.encode("utf-8")
-            result=sqlite3_bind_text(self.stmt,idx+1,a_u8,-1,NULL)
+            result=sqlite3_bind_text(self.stmt,idx+1,a_u8,len(a_u8),<void(*)(void*)>-1)
             if result!=SQLITE_OK:
                 print sqlite3_errmsg(self.db)
                 return False, result
-        return True
+        return True, 0
 
     cpdef int next(self):
         cdef int result = sqlite3_step(self.stmt)
@@ -38,6 +38,7 @@ cdef class DB:
         elif result==SQLITE_DONE:
             return 1
         else:
+            print sqlite3_errmsg(self.db)            
             return result
 
     cdef void fill_tset(self,TSet *out, int column_index):

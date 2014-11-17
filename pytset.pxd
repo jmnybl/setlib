@@ -27,6 +27,8 @@ cdef extern from "tset.h" namespace "tset":
 
 cdef class PyTSet:
     cdef TSet *thisptr
+    cdef acquire_thisptr(self,TSet *thisptr)
+    cdef bool dealloc_thisptr
 
 cdef class PyTSetArray:
     cdef TSetArray *thisptr

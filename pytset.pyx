@@ -8,12 +8,17 @@ cdef class PyTSet:
 
     def __cinit__(self, int length, it=None):
         self.thisptr = new TSet(length)
+        self.dealloc_thisptr=True
 
     def __init__(self, int length, it=None):
         cdef int i
         if it:
             for i in it:
                 self.add_item(i)
+
+    cdef acquire_thisptr(self,TSet *thisptr):
+        self.thisptr=thisptr
+        self.dealloc_thisptr=False
 
     def is_empty(self):
         return self.thisptr.is_empty()
@@ -59,7 +64,8 @@ cdef class PyTSet:
         return self
 
     def __dealloc__(self):
-        del self.thisptr
+        if self.dealloc_thisptr:
+            del self.thisptr
         
 
     def tobytes(self):
