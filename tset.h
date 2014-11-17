@@ -33,6 +33,7 @@ class TSet {
         char* get_data_as_char(int *size);
         void add_serialized_data(const void *data);
         void fill_ones();
+	void print_set();
 
 };
 
@@ -54,7 +55,7 @@ class TSetArray {
 ////        void start_iteration();
         void get_set(int index, TSet *result);
         void deserialize(const void *data, int size);
-
+	void print_array();
 };
 }
 

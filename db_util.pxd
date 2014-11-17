@@ -2,6 +2,7 @@ from libcpp cimport bool
 
 #...import stuff from this header file
 cdef extern from "sqlite3.h":
+    int sqlite3_bind_parameter_count(sqlite3_stmt*)
     int sqlite3_open_v2(const char *filename, sqlite3 **ppDb, int flags, const char *zvfs) 
     int sqlite3_close(sqlite3*)
     int sqlite3_prepare_v2(sqlite3 *db, const char *zSql, int nByte, sqlite3_stmt **ppStmt, const char **pzTail)
@@ -9,6 +10,7 @@ cdef extern from "sqlite3.h":
     const void * sqlite3_column_blob(sqlite3_stmt*, int)
     int sqlite3_column_bytes(sqlite3_stmt*, int iCol)
     int sqlite3_bind_text(sqlite3_stmt*,int iCol,const char* val,int len, void(*)(void*))
+    int sqlite3_column_int(sqlite3_stmt*, int iCol)
     const char * sqlite3_errmsg(sqlite3 *)
     struct sqlite3: #Defines the type. We never touch it directly, so an empty struct is apparently enough
         pass     
@@ -18,6 +20,7 @@ cdef extern from "sqlite3.h":
     int SQLITE_DONE
     int SQLITE_ROW
     int SQLITE_OPEN_READONLY
+    
 
 cdef extern from "tset.h" namespace "tset":
     cdef cppclass TSet:
@@ -42,6 +45,7 @@ cdef class DB:
     cdef void fill_tsetarray(self, TSetArray *out, int column_index)
     cpdef int next(self)
     cdef void fill_sets(self, void **set_pointers, int *types, int size)
+    cdef int get_integer(self, int column_index)
     
 cdef int TSET=1
 cdef int TSETARRAY=2

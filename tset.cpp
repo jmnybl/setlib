@@ -54,6 +54,15 @@ bool TSet::has_item(int item) {
      return (bitdata[item/bit_size_aelem] & left_one>>(item%bit_size_aelem));
 }
 
+void TSet::print_set() {
+  for (int i=0; i<tree_length; i++) {
+    if (has_item(i)) {
+      printf("%d ",i);
+    }
+  }
+  printf("\n");
+}
+
 bool TSet::is_empty() {
   for (int i=0; i<tree_length; i++) { //TODO: smarter
     if (has_item(i)) {
@@ -145,6 +154,17 @@ void TSet::add_serialized_data(const void *data) {
 }
 
 
+void TSetArray::print_array() {
+  TSet tmp(tree_length,NULL);
+  for (int s_idx=0; s_idx<tree_length; s_idx++) {
+    get_set(s_idx,&tmp);
+    for (int i_idx=0; i_idx<tree_length; i_idx++) {
+      if (tmp.has_item(i_idx)) {
+	printf("%d[%d]\n",s_idx,i_idx);
+      }
+    }
+  }
+}
 
 TSetArray::TSetArray(int tree_length) {
     this->tree_length=tree_length;
