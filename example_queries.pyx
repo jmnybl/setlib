@@ -58,8 +58,6 @@ cdef class Search:  # base class for all searches
                 return py_result
         return None
                 
-                
-
 cdef class  SimpleSearch(Search):
     """
     V <aux V
