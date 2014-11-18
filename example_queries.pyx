@@ -60,8 +60,6 @@ cdef class Search:  # base class for all searches
                 return graph_id,py_result
         return None,None
                 
-                
-
 cdef class  SimpleSearch(Search):
     """
     V <aux V
