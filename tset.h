@@ -31,8 +31,9 @@ class TSet {
         bool intersection_not_empty(TSet *other);
         void delete_item(int item);
         char* get_data_as_char(int *size);
-        void add_serialized_data(const void *data);
+        void deserialize(const void *data);
         void fill_ones();
+        void set_length(int tree_length);
 	void print_set();
 
 };
@@ -55,6 +56,7 @@ class TSetArray {
 ////        void start_iteration();
         void get_set(int index, TSet *result);
         void deserialize(const void *data, int size);
+        void set_length(int tree_length);
 	void print_array();
 };
 }
