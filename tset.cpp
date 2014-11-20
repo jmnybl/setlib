@@ -10,8 +10,7 @@ const aelem left_one =((aelem) 1)<<(bit_size_aelem-1);
 
 TSet::TSet(int tree_length) {
     if (tree_length>0) {
-      this->tree_length=tree_length;
-      array_len=tree_length/bit_size_aelem+1;
+      set_length(tree_length);
       bitdata=new aelem[array_len];
       erase();
       delete_memory=true;
@@ -25,8 +24,7 @@ TSet::TSet(int tree_length) {
 }
 
 TSet::TSet(int tree_length, aelem *bitdata) {
-    this->tree_length=tree_length;
-    array_len=tree_length/bit_size_aelem+1;
+    set_length(tree_length);
     this->bitdata=bitdata;
     delete_memory=false;
 }
@@ -146,29 +144,25 @@ void TSet::fill_ones() {
     memset(bitdata,~0,array_len*sizeof(aelem));
 }
 
-void TSet::add_serialized_data(const void *data) {
-    tree_length=((unsigned short *)data)[0];
+void TSet::set_length(int tree_length) {
+    this->tree_length=tree_length;
     array_len=tree_length/bit_size_aelem+1;
-    //printf("%d %d",tree_length,array_len);
-    bitdata=(aelem *)((char *)data+sizeof(unsigned short));
+}
+
+void TSet::deserialize(const void *data) {
+
+    set_length(((unsigned short *)data)[0]);
+    memcpy(bitdata,((char *)data+sizeof(unsigned short)),array_len*sizeof(aelem)); // TODO
+    //bitdata=(aelem *)((char *)data+sizeof(unsigned short));
+  
 }
 
 
-void TSetArray::print_array() {
-  TSet tmp(tree_length,NULL);
-  for (int s_idx=0; s_idx<tree_length; s_idx++) {
-    get_set(s_idx,&tmp);
-    for (int i_idx=0; i_idx<tree_length; i_idx++) {
-      if (tmp.has_item(i_idx)) {
-	printf("%d[%d]\n",s_idx,i_idx);
-      }
-    }
-  }
-}
+
 
 TSetArray::TSetArray(int tree_length) {
-    this->tree_length=tree_length;
-    array_len=(tree_length/bit_size_aelem+1)*tree_length;
+    set_length(tree_length);
+    //array_len=(tree_length/bit_size_aelem+1)*tree_length;
     bitdata=new aelem[array_len];
     erase();
 }
@@ -195,10 +189,15 @@ void TSetArray::union_update(TSetArray *other) {
     }
 }
 
+void TSetArray::set_length(int tree_length) {
+    this->tree_length=tree_length;
+    array_len=(tree_length/bit_size_aelem+1)*tree_length;
+}
+
 void TSetArray::deserialize(const void *data, int size) {
     unsigned short *array=(unsigned short *)data;
-    tree_length=array[0];
-    array_len=(tree_length/bit_size_aelem+1)*tree_length;
+    set_length(array[0]);
+    //array_len=(tree_length/bit_size_aelem+1)*tree_length;
     erase();
     for (int i=1;i<((size-sizeof(unsigned short))/sizeof(unsigned short));i+=2) {
         aelem *s=(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*array[i]);
@@ -207,7 +206,17 @@ void TSetArray::deserialize(const void *data, int size) {
     
 }
 
-
+void TSetArray::print_array() {
+    TSet tmp(tree_length,NULL);
+    for (int s_idx=0; s_idx<tree_length; s_idx++) {
+        get_set(s_idx,&tmp);
+        for (int i_idx=0; i_idx<tree_length; i_idx++) {
+            if (tmp.has_item(i_idx)) {
+                printf("%d[%d]\n",s_idx,i_idx);
+            }
+        }
+    }
+}
 
 
 
