@@ -34,6 +34,7 @@ class TSet {
         void deserialize(const void *data);
         void fill_ones();
         void set_length(int tree_length);
+        void complement();
 	void print_set();
 
 };
