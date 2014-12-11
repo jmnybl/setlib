@@ -183,6 +183,10 @@ void TSetArray::erase() {
     memset(bitdata, 0, array_len*sizeof(aelem));
 }
 
+void TSetArray::copy(TSetArray *other) {
+    memcpy(bitdata,other->bitdata,array_len*sizeof(aelem));
+}
+
 void TSetArray::get_set(int index, TSet *result) {
     result->bitdata=bitdata+(tree_length/bit_size_aelem+1)*index;
 }

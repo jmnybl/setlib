@@ -52,7 +52,7 @@ class TSetArray {
 ////        void add_item(int item);
 ////        bool has_item(int item);
         void erase();
-////        void copy(TSet *other);
+        void copy(TSetArray *other);
 ////        bool next_item(TSet *result);
 ////        void start_iteration();
         void get_set(int index, TSet *result);
