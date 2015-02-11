@@ -229,6 +229,34 @@ void TSetArray::deserialize(const void *data, int size) {
     
 }
 
+void TSetArray::filter_direction(bool direction) {
+    // direction = true; --> LEFT-TO-RIGHT
+    // direction = false; --> RIGHT-TO-LEFT
+
+    int size=tree_length/bit_size_aelem+1; // same than TSet array_len
+
+    for (int i=0; i<tree_length; i++) {
+        aelem *set =(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*i);
+        for (int j=0; j<size; j++) {
+            aelem shifted;
+            if (i/bit_size_aelem==j) {
+                shifted=~(aelem)0>>(i%bit_size_aelem);
+            }
+            else if (i/bit_size_aelem<j) {
+                shifted=(aelem)0;
+            }
+            else {
+                shifted=~(aelem)0;
+            }
+            if (direction) {
+                shifted=~shifted;
+            }
+   
+            set[j]&=shifted;
+        }
+    } 
+}
+
 void TSetArray::print_array() {
     TSet tmp(tree_length,NULL);
     for (int s_idx=0; s_idx<tree_length; s_idx++) {

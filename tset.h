@@ -58,6 +58,7 @@ class TSetArray {
         void get_set(int index, TSet *result);
         void deserialize(const void *data, int size);
         void set_length(int tree_length);
+        void filter_direction(bool direction);
 	void print_array();
 };
 }
