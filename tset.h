@@ -48,7 +48,7 @@ class TSetArray {
         TSetArray(int length);
         void intersection_update(TSetArray *other);
         void union_update(TSetArray *other);
-////        void minus_update(TSet *other);
+        void minus_update(TSetArray *other);
 ////        void add_item(int item);
 ////        bool has_item(int item);
         void erase();

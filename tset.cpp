@@ -205,6 +205,13 @@ void TSetArray::union_update(TSetArray *other) {
     }
 }
 
+void TSetArray::minus_update(TSetArray *other) {
+
+    for (int i=0;i<array_len;i++) {
+        bitdata[i]&=~(other->bitdata[i]);
+    }
+}
+
 void TSetArray::set_length(int tree_length) {
     this->tree_length=tree_length;
     array_len=(tree_length/bit_size_aelem+1)*tree_length;
