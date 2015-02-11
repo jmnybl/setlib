@@ -152,7 +152,7 @@ void TSet::complement() {
         bitdata[i]=~bitdata[i];
     }
     if (tree_length%bit_size_aelem!=0) {
-        bitdata[array_len-1]=bitdata[array_len-1]<<(bit_size_aelem-tree_length%bit_size_aelem);
+        bitdata[array_len-1]&=~0<<(bit_size_aelem-tree_length%bit_size_aelem);
     }
 }
 
