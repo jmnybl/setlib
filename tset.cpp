@@ -143,7 +143,7 @@ bool TSet::next_item(TSet *result) {
 void TSet::fill_ones() {
     memset(bitdata,~0,array_len*sizeof(aelem));
     if (tree_length%bit_size_aelem!=0) {
-        bitdata[array_len-1]=bitdata[array_len-1]<<(bit_size_aelem-tree_length%bit_size_aelem);
+        bitdata[array_len-1]&=~0<<(bit_size_aelem-tree_length%bit_size_aelem);
     }
 }
 
