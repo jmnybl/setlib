@@ -242,7 +242,7 @@ void TSetArray::filter_direction(bool direction) {
             if (i/bit_size_aelem==j) {
                 shifted=~(aelem)0>>(i%bit_size_aelem);
             }
-            else if (i/bit_size_aelem<j) {
+            else if (i/bit_size_aelem>j) {
                 shifted=(aelem)0;
             }
             else {
