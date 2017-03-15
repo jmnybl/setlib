@@ -68,13 +68,15 @@ cdef class PyTSet:
             del self.thisptr
         
 
-    def tobytes(self):
+    def tobytes(self, include_size=True):
         cdef int size
         cdef char *b = self.thisptr.get_data_as_char(&size)
         cdef bytes result=b[:size]
         tree_len=struct.pack("@H",self.thisptr.tree_length)
-
-        return tree_len+result
+        if include_size:
+            return tree_len+result
+        else:
+            return result
 
 cdef class PyTSetArray:
     #cdef TSetArray *thisptr #defined in pytset.pxd
