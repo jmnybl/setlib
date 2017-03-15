@@ -244,6 +244,46 @@ void TSetArray::deserialize(const void *data, int size) {
 }
 
 
+
+void TSetArray::make_lin_2(int window, int begin) {
+
+    int size=tree_length/bit_size_aelem+1; // same than TSet array_len
+
+    //Fill this with zeros
+    this->erase();
+
+    //Go through the lines
+    for (int i=0; i<tree_length; i++) {
+        aelem *set =(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*i);
+
+        //Win before
+        for (int a=begin; a<window+1; a++) {
+
+            //Let's keep within the limits!
+            if (i-a > -1){
+                //Let's add the item
+                set[(i-a)/bit_size_aelem] |= left_one>>((i-a)%bit_size_aelem);
+            }
+
+        }
+
+        //Win after
+        for (int a=begin; a<window+1; a++) {
+
+            //Let's keep within the limits!
+            if (i+a < tree_length + 1){
+                //Let's add the item
+                set[(i+a)/bit_size_aelem] |= left_one>>((i+a)%bit_size_aelem);
+            }
+
+        }
+
+    }
+}
+
+
+
+
 void TSetArray::make_lin(int window) {
 
     int size=tree_length/bit_size_aelem+1; // same than TSet array_len
