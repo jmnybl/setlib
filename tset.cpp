@@ -163,11 +163,22 @@ void TSet::set_length(int tree_length) {
 
 void TSet::deserialize(const void *data) {
 
-    set_length(((unsigned short *)data)[0]);
+    //set_length(((unsigned short *)data)[0]);
     memcpy(bitdata,((char *)data+sizeof(unsigned short)),array_len*sizeof(aelem)); // TODO
     //bitdata=(aelem *)((char *)data+sizeof(unsigned short));
   
 }
+
+
+void TSet::deserialize(int s_length, const void *data) {
+
+    set_length(s_length);//((unsigned short *)data)[0]);
+    //memcpy(bitdata,((char *)data+sizeof(unsigned short)),array_len*sizeof(aelem)); // TODO
+    memcpy(bitdata,((char *)data),array_len*sizeof(aelem)); // TODO
+    //bitdata=(aelem *)((char *)data+sizeof(unsigned short));
+
+}
+
 
 
 
@@ -184,6 +195,9 @@ void TSetArray::erase() {
 }
 
 void TSetArray::copy(TSetArray *other) {
+
+    set_length(other->tree_length);
+
     memcpy(bitdata,other->bitdata,array_len*sizeof(aelem));
 }
 
@@ -228,6 +242,96 @@ void TSetArray::deserialize(const void *data, int size) {
     }
     
 }
+
+
+
+void TSetArray::make_lin_2(int window, int begin) {
+
+    int size=tree_length/bit_size_aelem+1; // same than TSet array_len
+
+    //Fill this with zeros
+    this->erase();
+
+    //Go through the lines
+    for (int i=0; i<tree_length; i++) {
+        aelem *set =(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*i);
+
+        //Win before
+        for (int a=begin; a<window+1; a++) {
+
+            //Let's keep within the limits!
+            if (i-a > -1){
+                //Let's add the item
+                set[(i-a)/bit_size_aelem] |= left_one>>((i-a)%bit_size_aelem);
+            }
+
+        }
+
+        //Win after
+        for (int a=begin; a<window+1; a++) {
+
+            //Let's keep within the limits!
+            if (i+a < tree_length + 1){
+                //Let's add the item
+                set[(i+a)/bit_size_aelem] |= left_one>>((i+a)%bit_size_aelem);
+            }
+
+        }
+
+    }
+}
+
+
+
+
+void TSetArray::make_lin(int window) {
+
+    int size=tree_length/bit_size_aelem+1; // same than TSet array_len
+
+    //Fill this with zeros
+    this->erase();
+
+    //Go through the lines
+    for (int i=0; i<tree_length; i++) {
+        aelem *set =(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*i);
+
+        //Win before
+        for (int a=1; a<window+1; a++) {
+
+            //Let's keep within the limits!
+            if (i-a > -1){
+                //Let's add the item
+                set[(i-a)/bit_size_aelem] |= left_one>>((i-a)%bit_size_aelem);
+            }
+
+        }
+
+        //Win after
+        for (int a=1; a<window+1; a++) {
+
+            //Let's keep within the limits!
+            if (i+a < tree_length + 1){
+                //Let's add the item
+                set[(i+a)/bit_size_aelem] |= left_one>>((i+a)%bit_size_aelem);
+            }
+
+        }
+
+    }
+}
+
+void TSetArray::deserialize(int s_length, const void *data, int size) {
+    unsigned short *array=(unsigned short *)data;
+    set_length(s_length);
+    //array_len=(tree_length/bit_size_aelem+1)*tree_length;
+    erase();
+    for (int i=0;i<((size-sizeof(unsigned short))/sizeof(unsigned short));i+=2) {
+        aelem *s=(aelem *)(bitdata+(tree_length/bit_size_aelem+1)*array[i]);
+        s[array[i+1]/bit_size_aelem] |= left_one>>(array[i+1]%bit_size_aelem);
+    }
+
+}
+
 
 void TSetArray::filter_direction(bool direction) {
     // direction = true; --> LEFT-TO-RIGHT

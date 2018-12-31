@@ -68,7 +68,7 @@ cdef class PyTSet:
             del self.thisptr
         
 
-    def tobytes(self,include_size=True):
+    def tobytes(self, include_size=True):
         cdef int size
         cdef char *b = self.thisptr.get_data_as_char(&size)
         cdef bytes result=b[:size]
